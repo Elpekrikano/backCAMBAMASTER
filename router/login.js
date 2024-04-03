@@ -46,13 +46,12 @@ router.post('/', async (req, res) => {
             console.log('====================================');
 
             bcrypt.compare(password, usuario.password, (err, passwordMatch) => {
-                console.log('=============error=======================');
-                console.log(err);
-                console.log('=============error=======================');
-                console.log('===================uiii=================');
-                console.log(passwordMatch);
-                console.log('=================uiuiii===================');
-                if (err || !passwordMatch) {
+                if (err) {
+                    console.error('Error al comparar contraseñas:', err);
+                    return res.status(500).json({ error: 'Error en el servidor' });
+                }
+
+                if (!passwordMatch) {
                     console.log('====================================');
                     console.log("Dentro del segundo if");
                     console.log('====================================');

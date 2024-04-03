@@ -1,54 +1,45 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../app'); // Importa tu conexión a la base de datos
+const connection = require('../app');
+const multer = require('multer');
 
-// Consultar todos los registros de la tabla productos
-router.get('/', (req, res) => {
-    const query = 'SELECT * FROM productos';
-    connection.query(query, (error, resultado) => {
-        if (error) {
-            console.error(error.message);
-            return res.status(500).json({ error: 'Error en la consulta SQL' });
-        }
-
-        if (resultado.length > 0) {
-            res.json(resultado);
-        } else {
-            res.json(`No hay registros en la tabla productos`);
-        }
-    });
+// Configuración de Multer para manejar la carga de archivos
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'assetsproducts/'); // Directorio donde se guardarán las imágenes
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
 });
 
-// Consultar por código de producto en la tabla productos
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    const query = `SELECT * FROM productos WHERE cod_producto='${id}'`;
-    connection.query(query, (error, resultado) => {
-        if (error) {
-            console.error(error.message);
-            return res.status(500).json({ error: 'Error en la consulta SQL' });
-        }
-
-        if (resultado.length > 0) {
-            res.json(resultado);
-        } else {
-            res.json('No hay registros asociados al código de producto en la tabla productos');
-        }
-    });
-});
+const upload = multer({ storage: storage });
 
 // Agregar un nuevo registro a la tabla productos
-router.post('/agregar', (req, res) => {
-    const nuevoRegistro = req.body;
+router.post('/upload', upload.array('productImage', 5), (req, res) => {
+    const { productName, productDescription, productPrice } = req.body;
+    const productImages = req.files.map(file => file.path); // Obtener las rutas de las imágenes
+
+    // Verificar si se han proporcionado todos los datos necesarios
+    if (!productName || !productDescription || !productPrice || !productImages) {
+        return res.status(400).json({ error: 'Faltan datos del producto' });
+    }
+
+    const newProduct = {
+        title: productName,
+        description: productDescription,
+        price: productPrice,
+        images: productImages // Guardar las rutas de las imágenes en tu base de datos
+    };
 
     const query = 'INSERT INTO productos SET ?';
-    connection.query(query, nuevoRegistro, (error) => {
+    connection.query(query, newProduct, (error) => {
         if (error) {
             console.error(error.message);
             return res.status(500).json({ error: 'Error al insertar en la tabla productos' });
         }
 
-        res.json('Se insertó correctamente el registro en la tabla productos');
+        res.json('Producto agregado correctamente');
     });
 });
 

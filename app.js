@@ -3,10 +3,11 @@ const mysql = require('mysql2');
 
 // Configuración de la conexión a la base de datos
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: 'roundhouse.proxy.rlwy.net',
   user: 'root',
-  password: '',
-  database: 'cambalaches'
+  password: 'iEktBmKlPCWPOgoTZsVAekEuoaiiyWZs',
+  database: 'railway',
+  port: 46384
 });
 
 // Conexión a la base de datos

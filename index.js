@@ -253,7 +253,7 @@ app.get('/api/obtenerProductos/:correo', async (req, res) => {
     FROM productos g
     JOIN usuarios u ON g.idUsuario = u.identificador
     JOIN categorias cat ON g.categoria_identificador = cat.identificador
-    JOIN estadoProducto est ON g.estadoProducto_identificador = est.identificador
+    JOIN estadoproducto est ON g.estadoProducto_identificador = est.identificador
     WHERE correo = ?`;
 
 
@@ -280,7 +280,7 @@ app.get('/obtenerProductos', async (req, res) => {
       FROM productos g
       JOIN usuarios u ON g.idUsuario = u.identificador
       JOIN categorias cat ON g.categoria_identificador = cat.identificador
-      JOIN estadoProducto est ON g.estadoProducto_identificador = est.identificador`;
+      JOIN estadoproducto est ON g.estadoProducto_identificador = est.identificador`;
 
     const [rows] = await connection.execute(sql);
     connection.end();
@@ -334,7 +334,7 @@ app.get('/api/productos-estado', async (req, res) => {
       FROM
           productos p
       JOIN
-          estadoProducto ep ON p.estadoProducto_identificador = ep.identificador
+          estadoproducto ep ON p.estadoProducto_identificador = ep.identificador
       GROUP BY
           ep.nombre;
     `;

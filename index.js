@@ -201,9 +201,9 @@ app.post("/productos", upload.single('imagenOpcional'), async (req, res) => {
 
 
     if (req.file) {
-      urlImagen = 'http://localhost:3000/' + req.file.path;
+      urlImagen = 'https://backcambamaster-production.up.railway.app/' + req.file.path;
     } else {
-      urlImagen = 'http://localhost:3000/uploads/Chica_Chaqueta_Azul.jpeg';
+      urlImagen = 'https://backcambamaster-production.up.railway.app/uploads/Chica_Chaqueta_Azul.jpeg';
     }
 
     const connection = await mysql.createConnection(dbConfig);

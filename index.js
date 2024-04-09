@@ -148,7 +148,7 @@ app.get('/api/categorias', async (req, res) => {
 app.get('/api/estadoProducto', async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
-    const [rows] = await connection.execute('SELECT * FROM estadoProducto');
+    const [rows] = await connection.execute('SELECT * FROM estadoproducto');
     connection.end();
     res.status(200).json(rows);
   } catch (error) {
